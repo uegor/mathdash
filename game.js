@@ -7,14 +7,36 @@ class Hero{
         this.grounded = false
     }
 
-    move(){
-        if (!this.grounded)
-        this.div.style.top = parseInt(window.getComputedStyle(this.div).top) + this.speed_y
+    get_top(){
+        return parseInt(window.getComputedStyle(this.div).top)
     }
 
-    reverse_speed_y(){
-        this.speed_y *= -1
+    move(){
+        if (!this.grounded)
+            this.div.style.top = this.get_top() + this.speed_y
+    
+        if (this.get_top()<0){
+            this.div.style.top = 0
+            this.grounded = true
+        }
+
+        if (this.get_top()+50>H){
+            this.div.style.top = H-50
+            this.grounded = true
+        }
     }
+
+    jump(){
+        if (this.grounded){
+            reverse_speed_y(this)
+            this.grounded = false
+            setTimeout(reverse_speed_y,1000, this)
+        }
+    }
+}
+
+function reverse_speed_y(obj){
+    obj.speed_y = obj.speed_y * -1
 }
 
 //сразу после загрузки страницы срабатывает этот код
@@ -30,7 +52,7 @@ addEventListener("DOMContentLoaded", function() {
 })
 
 function event_handler(){
-    hero.reverse_speed_y()
+    hero.jump()
 }
 
 function move(){
